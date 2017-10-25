@@ -8,14 +8,15 @@ public class RoomSwitcher : MonoBehaviour
     public PlayerTracker tracker;
     LocDirID locationDirection = new LocDirID();
 
-	public GameObject[] Room;
+    public GameObject[] Room;
     public LocDirID[] switchCondition;
     int currentRoom = 0; //could make public if we want to start in different rooms I guess.
+    int maxRooms;
 
     // Use this for initialization
     void Start()
     {
-
+        maxRooms = Room.Length;
     }
 
     void Update()
@@ -23,19 +24,24 @@ public class RoomSwitcher : MonoBehaviour
         locationDirection = tracker.GetLocationAndDirection();
         Debug.Log(locationDirection.tile.ToString() + " , " + locationDirection.dir.ToString());
 
-        //add a condition for max number of rooms to avoid array index out of bounds error
-        if (CheckCondition(switchCondition[currentRoom]))
+        if (currentRoom < maxRooms - 1) //It doesn't check for the switch condition in the last room.
         {
-            SwitchRoom();
-            currentRoom++;
+            if (CheckCondition(switchCondition[currentRoom]))
+            {
+                SwitchRoom();
+                currentRoom++;
+            }
         }
     }
 
     void SwitchRoom()
     {
-        Room[currentRoom].SetActive(false);
-		Room[currentRoom+1].SetActive(true);
-		//fix array overflow here too
+        //double safeguard, I've fixed overflowing in Update() but I'll do it here in case we call it somewhere else
+        if (currentRoom < maxRooms - 1) //It doesn't change if you're already in the last room.
+        {
+            Room[currentRoom].SetActive(false);
+            Room[currentRoom + 1].SetActive(true);
+        }
     }
 
     bool CheckCondition(LocDirID condition)
