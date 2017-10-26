@@ -19,7 +19,7 @@ public class GridGenerator : MonoBehaviour
         {
             for (int y = 0; y < gridSize.y; y++)
             {
-                Vector3 tilePosition = new Vector3(-gridSize.x * (tileScale / 2f) + tileScale / 2f + x * tileScale, 0, -gridSize.y * (tileScale / 2f) + tileScale / 2f + y * tileScale); //offset so the grid is in the middle
+                Vector3 tilePosition = new Vector3(-gridSize.x * (tileScale / 2f) + tileScale / 2f + x * tileScale, transform.position.y, -gridSize.y * (tileScale / 2f) + tileScale / 2f + y * tileScale); //offset so the grid is in the middle
                 Transform newTile = Instantiate(tilePrefab, tilePosition, Quaternion.Euler(Vector3.right * 90)) as Transform;
                 newTile.transform.localScale = Vector3.one * tileScale; //scaling so the grid is in the middle
                 newTile.GetComponent<Tile>().SetID((int)gridSize.y * x + y);
