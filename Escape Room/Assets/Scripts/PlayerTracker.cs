@@ -18,14 +18,6 @@ public class PlayerTracker : MonoBehaviour
         }
     }
 
-    // void Update()
-    // {
-    //     if (locationDirection.tile == 28 && locationDirection.dir == 100) //Test conditions, we'll remove this once proper condition handling is done
-    //     {
-    //         StopCoroutine(lastCoroutine);
-    //     }
-    // }
-
     void GetTileID()
     {
         Ray ray = new Ray(trackedObject.transform.position, Vector3.down);
@@ -76,7 +68,6 @@ public class PlayerTracker : MonoBehaviour
 
     public LocDirID GetLocationAndDirection()
     {
-		Debug.Log("aasd" + locationDirection.dir);
         return locationDirection;
     }
 }

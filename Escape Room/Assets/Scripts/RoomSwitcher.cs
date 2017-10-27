@@ -10,7 +10,7 @@ public class RoomSwitcher : MonoBehaviour
 
     public GameObject[] Room;
     public LocDirID[] switchCondition;
-    int currentRoom = 0; //could make public if we want to start in different rooms I guess.
+    int currentRoom = 1; //could make public if we want to start in different rooms I guess.
     int maxRooms;
 
     // Use this for initialization
@@ -26,7 +26,7 @@ public class RoomSwitcher : MonoBehaviour
 
         if (currentRoom < maxRooms - 1) //It doesn't check for the switch condition in the last room.
         {
-            if (CheckCondition(switchCondition[currentRoom]))
+            if (CheckCondition(switchCondition[currentRoom - 1]))
             {
                 SwitchRoom();
                 currentRoom++;
@@ -37,9 +37,9 @@ public class RoomSwitcher : MonoBehaviour
     void SwitchRoom()
     {
         //double safeguard, I've fixed overflowing in Update() but I'll do it here in case we call it somewhere else
-        if (currentRoom < maxRooms - 1) //It doesn't change if you're already in the last room.
+        if (currentRoom < maxRooms - 1 && currentRoom != 0) //It doesn't change if you're already in the last room, or if the current room is set to be the 1st corridor
         {
-            Room[currentRoom].SetActive(false);
+            Room[currentRoom - 1].SetActive(false);
             Room[currentRoom + 1].SetActive(true);
         }
     }
