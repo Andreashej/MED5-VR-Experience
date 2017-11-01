@@ -9,8 +9,9 @@ public class RoomSwitcher : MonoBehaviour
     LocDirID locationDirection = new LocDirID();
 
     public GameObject[] Room;
-    public LocDirID[] switchCondition;
-    int currentRoom = 1; //could make public if we want to start in different rooms I guess.
+    public LocDirID startPosition;
+    public SwitchCondition[] switchCondition;
+    public int currentRoom = 0; //could make public if we want to start in different rooms I guess.
     int maxRooms;
 
     // Use this for initialization
@@ -24,14 +25,28 @@ public class RoomSwitcher : MonoBehaviour
         locationDirection = tracker.GetLocationAndDirection();
         Debug.Log(locationDirection.tile.ToString() + " , " + locationDirection.dir.ToString());
 
-        if (currentRoom < maxRooms - 1) //It doesn't check for the switch condition in the last room.
+        if (currentRoom == 0)
         {
-            if (CheckCondition(switchCondition[currentRoom - 1]))
+            if (CheckCondition(startPosition))
+            {
+                StartRooms();
+                currentRoom = 2;
+            }
+        }
+        if (currentRoom != 0 && currentRoom < maxRooms - 1) //It doesn't check for the switch condition in the last room.
+        {
+            if (CheckCondition(switchCondition[currentRoom - 2]))
             {
                 SwitchRoom();
                 currentRoom++;
             }
         }
+    }
+
+    void StartRooms(){
+        Room[0].SetActive(false);
+        Room[1].SetActive(true);
+        Room[2].SetActive(true);
     }
 
     void SwitchRoom()
@@ -44,8 +59,37 @@ public class RoomSwitcher : MonoBehaviour
         }
     }
 
+    //Old conditioncheck with only one tile for standing. We can use this for calibration.
     bool CheckCondition(LocDirID condition)
     {
         return (locationDirection.tile == condition.tile && locationDirection.dir == condition.dir);
     }
+
+    bool CheckCondition(SwitchCondition condition)
+    {
+        if (condition.tile.Length == 1) //if we only have one tile condition we can just use the old one, no need to enter a for loop..
+        {
+            return CheckCondition(new LocDirID(condition.tile[0], condition.direction));
+        }
+        else
+        {
+            bool tile = false; //Initializes the standing condition as false
+            for (int i = 0; i < condition.tile.Length; i++) //The for runs til the last standing condition
+            {
+                if (locationDirection.tile == condition.tile[i]) //if we're standing on an "allowed" tile
+                {
+                    tile = true; //standing condition is true
+                    break; //we don't have to check anymore
+                }
+            }
+            return (tile && (locationDirection.dir == condition.direction));
+        } //since we're standing on the correct tile, we check for looking tile and return the result
+    }
+}
+
+[System.Serializable]
+public struct SwitchCondition
+{
+    public int[] tile; //So multiple tiles can be used for standing condition
+    public int direction;
 }
