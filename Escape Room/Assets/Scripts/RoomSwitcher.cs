@@ -23,7 +23,7 @@ public class RoomSwitcher : MonoBehaviour
     void Update()
     {
         locationDirection = tracker.GetLocationAndDirection();
-        Debug.Log(locationDirection.tile.ToString() + " , " + locationDirection.dir.ToString());
+        //Debug.Log(locationDirection.tile.ToString() + " , " + locationDirection.dir.ToString());
 
         if (currentRoom == 0)
         {

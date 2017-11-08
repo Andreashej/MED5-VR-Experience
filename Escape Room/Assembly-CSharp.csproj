@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\GridGenerator.cs" />
      <Compile Include="Assets\Scripts\PlayerTracker.cs" />
      <Compile Include="Assets\Scripts\RoomSwitcher.cs" />
+     <Compile Include="Assets\Scripts\RuneWheel.cs" />
      <Compile Include="Assets\Scripts\Tile.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_GazeTracker.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_LaserPointer.cs" />
