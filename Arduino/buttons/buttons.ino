@@ -9,6 +9,8 @@ const String Delimiter = "\t";
 
 bool buttonOne = false;
 bool buttonTwo = false;
+bool lastButtonOne = false;
+bool lastButtonTwo = false;
 
 int BTN_ONE_PIN = 2;
 int BTN_TWO_PIN= 3;
@@ -28,7 +30,6 @@ void setup() {
     pinMode(BTN_TWO_PIN, INPUT);
 }
 
-
 // ================================================================
 // ===                    MAIN PROGRAM LOOP                     ===
 // ================================================================
@@ -42,15 +43,22 @@ void SerialOutput() {
   //Time to output new data?
   if(millis() - serialLastOutput < serialOutputInterval)
     return;
-  serialLastOutput = millis();
+
+  if (buttonOne == digitalRead(BTN_ONE_PIN) && buttonTwo == digitalRead(BTN_TWO_PIN))
+    return;
+
+  buttonOne = digitalRead(BTN_ONE_PIN);
+  buttonTwo = digitalRead(BTN_TWO_PIN);
+  
+    serialLastOutput = millis();
 
   //Write data package to Unity
   Serial.write(StartFlag);    //Flag to indicate start of data package
   Serial.print(millis());     //Write the current "time"
   Serial.print(Delimiter);    //Delimiter used to split values
-  Serial.print(digitalRead(BTN_ONE_PIN));       //Write a value
+  Serial.print(buttonOne);       //Write a value
   Serial.print(Delimiter);    //Write delimiter
-  Serial.print(digitalRead(BTN_TWO_PIN));       //...
+  Serial.print(buttonTwo);       //...
   Serial.println();           // Write endflag '\n' to indicate end of package
 
 }
