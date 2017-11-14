@@ -6,13 +6,13 @@ Shader "Custom/LightReveal" {
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 
-		// Direction of the spotlight cone
+		// Default direction of the spotlight cone
 		_LightDirection("Light Direction", Vector) = (0,0,1,0)
 
-		// Position of the light source
+		// Default position of the light source
 		_LightPosition("Light Position", Vector) = (0,0,0,0)
 
-		// The spotlight angle
+		// The default spotlight angle
 		_LightAngle("Light Angle", Range(0,180)) = 45
 
 		// Intensity scalar
@@ -47,13 +47,18 @@ Shader "Custom/LightReveal" {
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 
-			
-			float3 direction = normalize(_LightPosition - IN.worldPos);
+			// Making a directional vector from light position to pixel with a magnitude of 1
+			float3 direction = normalize(IN.worldPos - _LightPosition);
 
+			//Finding dot product between direction and lightdirection vector
 			float scale = dot(direction, _LightDirection);
-			float intensity = scale - cos(_LightAngle * (3.14 / 360.0));
-			intensity = min(max(intensity * _IntensityScalar, 0), 1);
 			
+			//If the pixel is outside the lightcone, the intensity will get a negative value
+			float intensity = scale - cos((_LightAngle / 2) * (3.14 / 180.0));
+
+			//If the intensity is bigger than 1 it returns 1. If it's between 0 and one it returns the value. If it's smaller than 0 it returns 0.
+			intensity = min(max(intensity * _IntensityScalar, 0), 1);
+
 			// Albedo comes from a texture tinted by color
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = c.rgb;
