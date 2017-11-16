@@ -7,6 +7,11 @@ public class ArduinoHandler : MonoBehaviour
     bool btnOnePressed;
     bool btnTwoPressed;
 
+    //Event handler
+    public delegate void NewDataEventHandler();
+    public static event NewDataEventHandler BtnOnePress;
+    public static event NewDataEventHandler BtnTwoPress;
+
     // Use this for initialization
     void Start()
     {
@@ -20,6 +25,10 @@ public class ArduinoHandler : MonoBehaviour
             if (arduino.ButtonOne)
             {
                 Debug.Log("BTN 1");
+
+                if (BtnOnePress != null)   //Check that someone is actually subscribed to the event
+                    BtnOnePress(); //Subscribe to button one presses by writing ArduinoHandler.BtnOnePress += ...
+
                 btnOnePressed = true;
             }
         }
@@ -34,6 +43,10 @@ public class ArduinoHandler : MonoBehaviour
             if (arduino.ButtonTwo)
             {
                 Debug.Log("BTN 2");
+
+                if (BtnTwoPress != null)   //Check that someone is actually subscribed to the event
+                    BtnTwoPress(); //Subscribe to button two presses by writing ArduinoHandler.BtnTwoPress += ...
+
                 btnTwoPressed = true;
             }
 
