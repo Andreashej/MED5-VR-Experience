@@ -2,10 +2,11 @@
 using System.Collections;
 using System.IO.Ports;
 
-public class Arduino : MonoBehaviour {
+public class Arduino : MonoBehaviour
+{
 
     //Serial port values
-	public string PortName = "";
+    public string PortName = "";
     public int BaudRate = 9600;
     public char StartFlag = '#';
     public int PollingRate = 100;
@@ -28,14 +29,16 @@ public class Arduino : MonoBehaviour {
     public static event NewDataEventHandler NewDataEvent;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         OpenPort(); //Open the serial port when the scene is loaded.
     }
-	
-	// My Arduino script uses coroutines instead of Update, to enable faster serial communication than the frame rate
-	void Update () {
 
-        
+    // My Arduino script uses coroutines instead of Update, to enable faster serial communication than the frame rate
+    void Update()
+    {
+
+
     }
 
     //Process the data we get from our Arduino (this function might be called more often than Update(), depending on the chosen polling rate)
@@ -49,15 +52,14 @@ public class Arduino : MonoBehaviour {
         // ----- INPUT FROM ARDUINO TO UNITY ----- //
         //From here you can do what ever you want with the data.
         //As an example, I parse the data into public variables that can be accessed from other classes/scripts:
-
         string[] values = serialInput.Split('\t');  //Split the string between the chosen delimiter (tab)
 
         ArduinoMillis = uint.Parse(values[0]);      //Pass the first value to an unsigned integer
-        ButtonOne = bool.Parse(values[1]); //Get value from button on pin 2
-        ButtonTwo = bool.Parse(values[2]); //Get value from button on pin 3
+        ButtonOne = StringToBoolean(values[1]); //Get value from button on pin 2
+        ButtonTwo = StringToBoolean(values[2]); //Get value from button on pin 3
+        Debug.Log(values[2]);
 
         //Feel free to add new variables (both here and in the Arduino script).
-
 
         //When ever new data arrives, the scripts fires an event to any scripts that are subscribed, to let them know there is new data available (e.g. my Arduino Logger script).
         if (NewDataEvent != null)   //Check that someone is actually subscribed to the event
@@ -73,49 +75,12 @@ public class Arduino : MonoBehaviour {
         //  }
     }
 
-    private const int outputCount = 7; //Number of outputs! (Has to match with Arduino script)
-    private byte[] outputBuffer = new byte[outputCount];
-    void OutputDataToArduino()
-    {
-        
-        // ----- OUTPUT FROM UNITY TO ARDUINO ----- //
-        //Here you can output any variables you want from Unity to your Arduino.
-        //The values you output should be bytes (0-255).
-        //If you need large ranges (e.g. 1024), you need to pack the variable into several bytes (e.g. using bit shifting).
-
-        //As an example, I output 1 or 0 depending on buttons A-J on the keyboard.
-        //These variables or similar variables could also be made public on the class (and even static for convenience) and be changed from other scripts
-        int ExampleValue0 = Input.GetKey(KeyCode.A) ? 1 : 0;
-        int ExampleValue1 = Input.GetKey(KeyCode.S) ? 1 : 0;
-        int ExampleValue2 = Input.GetKey(KeyCode.D) ? 1 : 0;
-        int ExampleValue3 = Input.GetKey(KeyCode.F) ? 1 : 0;
-        int ExampleValue4 = Input.GetKey(KeyCode.G) ? 1 : 0;
-        int ExampleValue5 = Input.GetKey(KeyCode.H) ? 1 : 0;
-        int ExampleValue6 = Input.GetKey(KeyCode.J) ? 1 : 0;
-
-        //Put the values into a byte array (output buffer)
-        outputBuffer[0] = (byte)ExampleValue0;
-        outputBuffer[1] = (byte)ExampleValue1;
-        outputBuffer[2] = (byte)ExampleValue2;
-        outputBuffer[3] = (byte)ExampleValue3;
-        outputBuffer[4] = (byte)ExampleValue4;
-        outputBuffer[5] = (byte)ExampleValue5;
-        outputBuffer[6] = (byte)ExampleValue6;
-
-        //Output the byte array
-        try
-        {
-            arduino.Write(outputBuffer, 0, outputCount);
-        }
-        catch (System.Exception e)
-        {
-            //Write some times just times out, even when the baudrate is correct.
-            Debug.LogException(e);
-            Debug.LogError("arduino.Write timed out? Have you selected the correct BaudRate?");
-        }
+    bool StringToBoolean(string str) {
+        if (int.Parse(str) == 1)
+            return true;
+        else 
+            return false;
     }
-
-
 
     // ----- SERIAL COMMUNICATION ----- //
     //The code below is handling everything else concerning the serial communication.
@@ -165,8 +130,6 @@ public class Arduino : MonoBehaviour {
                 }
                 //Reset the timeout counter (as we just recieved some data)
                 readTimeouts = 0;
-                //Output from Unity to Arduino (function above). If we have recieved something from the Arduino, it should be ready to recieved something back.
-                OutputDataToArduino();
             }
             catch (System.Exception e)
             {
@@ -200,8 +163,8 @@ public class Arduino : MonoBehaviour {
             gameObject.SetActive(false);
             return;
         }
-        Invoke("OpenPort",5f);
-        
+        Invoke("OpenPort", 5f);
+
     }
 
     void OpenPort()
@@ -221,7 +184,7 @@ public class Arduino : MonoBehaviour {
             {
                 Debug.Log(portName);
             }
-            
+
             return;
         }
 

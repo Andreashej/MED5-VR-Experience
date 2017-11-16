@@ -1,7 +1,7 @@
 // Output Frequency = 1000 
 // serialOutputInterval = 1000 
 // 10 = 100Hz
-const unsigned int serialOutputInterval = 10; 
+const unsigned int serialOutputInterval = 100; 
 unsigned long serialLastOutput = 0;
 
 const char StartFlag = '#';
@@ -43,18 +43,20 @@ void SerialOutput() {
   //Time to output new data?
   if(millis() - serialLastOutput < serialOutputInterval)
     return;
-
-  if (buttonOne == digitalRead(BTN_ONE_PIN) && buttonTwo == digitalRead(BTN_TWO_PIN))
-    return;
-
+    
+  serialLastOutput = millis();
   buttonOne = digitalRead(BTN_ONE_PIN);
-  buttonTwo = digitalRead(BTN_TWO_PIN);
+  buttonTwo = digitalRead(BTN_TWO_PIN); 
   
-    serialLastOutput = millis();
-
   //Write data package to Unity
   Serial.write(StartFlag);    //Flag to indicate start of data package
   Serial.print(millis());     //Write the current "time"
+   
+   /*if (buttonOne == digitalRead(BTN_ONE_PIN) && buttonTwo == digitalRead(BTN_TWO_PIN)) {
+    Serial.println();
+    return;
+  }*/
+  
   Serial.print(Delimiter);    //Delimiter used to split values
   Serial.print(buttonOne);       //Write a value
   Serial.print(Delimiter);    //Write delimiter
