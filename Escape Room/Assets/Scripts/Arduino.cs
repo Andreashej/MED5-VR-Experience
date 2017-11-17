@@ -57,7 +57,6 @@ public class Arduino : MonoBehaviour
         ArduinoMillis = uint.Parse(values[0]);      //Pass the first value to an unsigned integer
         ButtonOne = StringToBoolean(values[1]); //Get value from button on pin 2
         ButtonTwo = StringToBoolean(values[2]); //Get value from button on pin 3
-        Debug.Log(values[2]);
 
         //Feel free to add new variables (both here and in the Arduino script).
 

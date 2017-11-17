@@ -1717,7 +1717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c4b094e265f7d747ac1819ef99b71e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PortName: 
+  PortName: COM4
   BaudRate: 9600
   StartFlag: 35
   PollingRate: 100

@@ -16,6 +16,16 @@ public class ArduinoHandler : MonoBehaviour
     void Start()
     {
         Arduino.NewDataEvent += NewData;
+        BtnOnePress += Btn1Test; //Testing the eventhandler
+        BtnTwoPress += Btn2Test; //Testing the eventhandler
+    }
+
+    void Btn1Test() {
+        Debug.Log("BTN 1");
+    }
+
+    void Btn2Test() {
+        Debug.Log("BTN 2");
     }
 
     void NewData(Arduino arduino)
@@ -24,7 +34,7 @@ public class ArduinoHandler : MonoBehaviour
         {
             if (arduino.ButtonOne)
             {
-                Debug.Log("BTN 1");
+                //Debug.Log("BTN 1");
 
                 if (BtnOnePress != null)   //Check that someone is actually subscribed to the event
                     BtnOnePress(); //Subscribe to button one presses by writing ArduinoHandler.BtnOnePress += ...
@@ -42,7 +52,7 @@ public class ArduinoHandler : MonoBehaviour
         {
             if (arduino.ButtonTwo)
             {
-                Debug.Log("BTN 2");
+                //Debug.Log("BTN 2");
 
                 if (BtnTwoPress != null)   //Check that someone is actually subscribed to the event
                     BtnTwoPress(); //Subscribe to button two presses by writing ArduinoHandler.BtnTwoPress += ...
