@@ -11,14 +11,10 @@ public class BezierCurve : MonoBehaviour
     [Range(0, 360)] //steps capped at 360, a full rotation
     public int currentPos;
 
-    // Use this for initialization
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
     void Update()
     {
+        //We should make a functioning line renderer here so we don't have to use visible objects to move the curve
+
 
         //this is to check if GetPoint works, it does. The target gameobject is not necessary, we'll use the LookAt method for a spotlight in the sphere
         target.position = GetPoint((float)currentPos);

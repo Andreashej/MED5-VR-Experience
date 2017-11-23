@@ -45,32 +45,23 @@ public class LightSphere : MonoBehaviour
         if (Input.GetKeyDown("r"))
         {
             ChangeLight(0);
-            lights[0].SetActive(true);
-            lights[1].SetActive(false);
-            lights[2].SetActive(false);
         }
 
         if (Input.GetKeyDown("g"))
         {
             ChangeLight(1);
-            lights[0].SetActive(false);
-            lights[1].SetActive(true);
-            lights[2].SetActive(false);
         }
 
         if (Input.GetKeyDown("b"))
         {
             ChangeLight(2);
-            lights[0].SetActive(false);
-            lights[1].SetActive(false);
-            lights[2].SetActive(true);
         }
 
         //The current light followes a Bezier curve. If we want we can modify it to a spline later so the transition at the 0 degree mark is smoother
         lights[currentLight].transform.LookAt(curves[currentLight].GetPoint(sphere.transform.eulerAngles.y));
     }
 
-    //c will be replaced with currentLight or all light indexes, so we can check conditions individually or all at the same time
+    //Checks the condition for the current light selected
     bool CheckCondition() //This could run into an error when the condition is near (closer than "wiggleRoom") 0 degrees, we should make sure this won't happen
     {
         if (sphere.transform.eulerAngles.y == conditions[currentLight] || sphere.transform.eulerAngles.y >= conditions[currentLight] - wiggleRoom && sphere.transform.eulerAngles.y <= conditions[currentLight] + wiggleRoom)
@@ -80,6 +71,7 @@ public class LightSphere : MonoBehaviour
         else return false;
     }
 
+    //Checks the condition for any given light passed through colorIndex.
     bool CheckCondition(int colorIndex) //This could run into an error when the condition is near (closer than "wiggleRoom") 0 degrees, we should make sure this won't happen
     {
         if (savedRotations[colorIndex] >= conditions[colorIndex] - wiggleRoom && savedRotations[colorIndex] <= conditions[colorIndex] + wiggleRoom)
@@ -89,6 +81,7 @@ public class LightSphere : MonoBehaviour
         else return false;
     }
 
+    //Checks the current condition and the remaining two as well.
     bool CheckEveryCondition()
     {
         for (int i = 0; i < conditions.Length; i++)
@@ -105,10 +98,13 @@ public class LightSphere : MonoBehaviour
         return true;
     }
 
+    //Changes the current light to the one passed in the light argument
     void ChangeLight(int light)
     {
-        savedRotations[currentLight] = sphere.transform.eulerAngles.y;
-        currentLight = light;
-        sphere.transform.rotation = Quaternion.Euler(0, savedRotations[light], 0);
+        lights[currentLight].SetActive(false); //turns off the current light
+        lights[light].SetActive(true); //turns on the next light
+        savedRotations[currentLight] = sphere.transform.eulerAngles.y; //saves the current rotation
+        currentLight = light; //changes currentLight to the new one
+        sphere.transform.rotation = Quaternion.Euler(0, savedRotations[light], 0); //loads the saved rotation for the new light
     }
 }
