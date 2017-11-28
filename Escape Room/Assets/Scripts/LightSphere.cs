@@ -18,13 +18,7 @@ public class LightSphere : MonoBehaviour
 
     public float rotationSnaphot;
     public bool isTrackerVersion;
-
-    void Start()
-    {
-        lights[0].SetActive(true);
-        lights[1].SetActive(false);
-        lights[2].SetActive(false);
-    }
+    bool isLit;
 
     void Update()
     {
@@ -66,7 +60,7 @@ public class LightSphere : MonoBehaviour
         //this code is responsible for the rotations when we test the game in "tracker mode" without controllers
         if (isTrackerVersion)
         {
-            sphere.rotation = Quaternion.Euler(0,tracker.eulerAngles.z - rotationSnaphot + savedRotations[currentLight],0);
+            sphere.rotation = Quaternion.Euler(0, tracker.eulerAngles.z - rotationSnaphot + savedRotations[currentLight], 0);
         }
     }
 
@@ -110,11 +104,30 @@ public class LightSphere : MonoBehaviour
     //Changes the current light to the one passed in the light argument
     void ChangeLight(int light)
     {
+        isLit = false;
         rotationSnaphot = tracker.eulerAngles.z;
-        lights[currentLight].SetActive(false); //turns off the current light
-        lights[light].SetActive(true); //turns on the next light
+        //lights[currentLight].SetActive(false); //turns off the current light
+        //lights[light].SetActive(true); //turns on the next light
         savedRotations[currentLight] = sphere.eulerAngles.y; //saves the current rotation
         currentLight = light; //changes currentLight to the new one
         sphere.rotation = Quaternion.Euler(0, savedRotations[light], 0); //loads the saved rotation for the new light
     }
+
+    public void TurnLightOn()
+    {
+        if (!isLit)
+        {
+            Debug.Log("light on");
+            for (int i = 0; i < 3; i++) lights[i].SetActive(false);
+            lights[currentLight].SetActive(true);
+        }
+        isLit = true;
+    }
+
+    public void TurnLightOff()
+    {
+        for (int i = 0; i < 3; i++) lights[i].SetActive(false);
+        isLit = false;
+    }
+
 }
