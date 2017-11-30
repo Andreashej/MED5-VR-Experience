@@ -18,40 +18,55 @@ public class LightSphere : MonoBehaviour
 
     public float rotationSnaphot;
     public bool isTrackerVersion;
-    bool isLit;
+    bool isLit, chestOpen;
+    public bool isDone;
+
+    void Start()
+    {
+        ArduinoHandler.BtnOnePress += CheckConditionsOnButtonPress;
+    }
 
     void Update()
     {
-        //keyboard controls
-        if (Input.GetKeyDown("right"))
+        if (!isDone)
         {
-            sphere.transform.Rotate(0, 10, 0);
-        }
+            //keyboard controls
+            if (Input.GetKeyDown("right"))
+            {
+                sphere.transform.Rotate(0, 10, 0);
+            }
 
-        if (Input.GetKeyDown("left"))
-        {
-            sphere.transform.Rotate(0, -10, 0);
-        }
+            if (Input.GetKeyDown("left"))
+            {
+                sphere.transform.Rotate(0, -10, 0);
+            }
 
-        if (Input.GetKeyDown("space"))
-        {
-            Debug.Log(sphere.transform.eulerAngles.y);
-            Debug.Log(CheckEveryCondition());
-        }
+            if (Input.GetKeyDown("space"))
+            {
+                CheckEveryCondition();
+                Debug.Log(sphere.transform.eulerAngles.y);
+                Debug.Log(isDone);
+            }
 
-        if (Input.GetKeyDown("r"))
-        {
-            ChangeLight(0);
-        }
+            if (Input.GetKeyDown("r"))
+            {
+                ChangeLight(0);
+            }
 
-        if (Input.GetKeyDown("g"))
-        {
-            ChangeLight(1);
-        }
+            if (Input.GetKeyDown("g"))
+            {
+                ChangeLight(1);
+            }
 
-        if (Input.GetKeyDown("b"))
-        {
-            ChangeLight(2);
+            if (Input.GetKeyDown("b"))
+            {
+                ChangeLight(2);
+            }
+            else if(!chestOpen)
+            {
+                //open chest
+                chestOpen = true;
+            }
         }
 
         //The current light followes a Bezier curve. If we want we can modify it to a spline later so the transition at the 0 degree mark is smoother
@@ -99,6 +114,21 @@ public class LightSphere : MonoBehaviour
             }
         }
         return true;
+    }
+
+    void CheckConditionsOnButtonPress()
+    {
+        if (CheckEveryCondition())
+        {
+            isDone = true;
+            Debug.Log("done");
+            return;
+        }
+        else
+        {
+            Debug.Log("not done");
+            return;
+        }
     }
 
     //Changes the current light to the one passed in the light argument

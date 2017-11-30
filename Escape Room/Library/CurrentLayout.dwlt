@@ -70,7 +70,7 @@ MonoBehaviour:
   m_MinSize: {x: 306, y: 221}
   m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 39
+  controlID: 118
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_MinSize: {x: 1021, y: 442}
   m_MaxSize: {x: 26016, y: 10021}
   vertical: 1
-  controlID: 60
+  controlID: 139
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -112,8 +112,8 @@ MonoBehaviour:
     y: 0
     width: 246
     height: 947
-  m_MinSize: {x: 204, y: 221}
-  m_MaxSize: {x: 4004, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -188,7 +188,7 @@ MonoBehaviour:
   m_MinSize: {x: 1021, y: 442}
   m_MaxSize: {x: 26016, y: 10021}
   vertical: 0
-  controlID: 61
+  controlID: 140
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_MinSize: {x: 306, y: 442}
   m_MaxSize: {x: 8006, y: 8042}
   vertical: 1
-  controlID: 138
+  controlID: 117
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -276,8 +276,8 @@ MonoBehaviour:
     y: 0
     width: 452
     height: 947
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 277, y: 71}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -326,8 +326,8 @@ MonoBehaviour:
     y: 0
     width: 228
     height: 285
-  m_MinSize: {x: 204, y: 221}
-  m_MaxSize: {x: 4004, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 19}
   m_Panes:
   - {fileID: 19}
@@ -387,9 +387,9 @@ MonoBehaviour:
     height: 926
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
-    m_LastClickedID: 0
-    m_ExpandedIDs: 72d1f7ff76d1f7ff5644faff3632fdff962dffff9a2dffff44fbffff8efbffffa0fbffff000000001c2f0000ae2f0000da3100000a3200005232000056320000e8320000f6320000
+    m_SelectedIDs: 32330000
+    m_LastClickedID: 13106
+    m_ExpandedIDs: 6069f5ffb477f5ffa2cef5ff182bf6ff16c2f6ffcacef6ffc61bf7ff8a1cf7ff8c1cf7ff9a4df9fff87bf9ff2e7cf9ff620dfbffde2efcffb499fcff284afdff3aecfdff905afeff40b6ffff48b6ffff62b6ffffa6fbffff00000000183000001c3100005c310000603300006833000092330000a0330000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -483,20 +483,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/SteamVR/InteractionSystem/Core/Scripts
+    - Assets/Models/Materials
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/SteamVR/InteractionSystem/Core/Scripts
+  - Assets/Models/Materials
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\baller\Documents\MED5\2017_2_version\Project\Escape
     Room
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 4c2b0000
-    m_LastClickedID: 11084
-    m_ExpandedIDs: 000000003c280000a2290000742c0000042d0000ae2d0000d82d000070360000723600007436000076360000783600007a36000000ca9a3bffffff7f
+    m_SelectedIDs: 7a2d0000
+    m_LastClickedID: 11642
+    m_ExpandedIDs: 000000003a280000ee28000032290000ae290000aa2c0000ee2d00001c2e000070370000723700007437000076370000783700007a370000e0c6010000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -524,7 +524,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000003c280000a2290000ae2d0000d82d000070360000723600007436000076360000783600007a360000
+    m_ExpandedIDs: 000000003a280000ae290000aa2c00003c2d0000ee2d00001c2e000070370000723700007437000076370000783700007a370000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -576,7 +576,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 205.95703}
     m_GridSize: 64
   m_DirectoriesAreaWidth: 110
 --- !u!114 &19
@@ -682,14 +682,14 @@ MonoBehaviour:
     width: 795
     height: 641
   m_SceneLighting: 1
-  lastFramingTime: 6014.416351124741
+  lastFramingTime: 1264.0773833021212
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 2.5440001, y: -0.7783541, z: -0.031499743}
+    m_Target: {x: 0.041665077, y: -1.0850289, z: 0.119418025}
     speed: 2
-    m_Value: {x: 2.5440001, y: -0.7783541, z: -0.031499743}
+    m_Value: {x: 0.041665077, y: -1.0850289, z: 0.119418025}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -712,17 +712,17 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+    m_Target: {x: -0.18588278, y: -0.8030222, z: 0.46770194, w: -0.31915182}
     speed: 2
-    m_Value: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
+    m_Value: {x: -0.18588278, y: -0.8030222, z: 0.46770194, w: -0.31915182}
   m_Size:
-    m_Target: 6.1605635
+    m_Target: 2.8846955
     speed: 2
-    m_Value: 6.1605635
+    m_Value: 2.8846955
   m_Ortho:
-    m_Target: 1
+    m_Target: 0
     speed: 2
-    m_Value: 1
+    m_Value: 0
   m_ShowGlobalGrid: 1
   m_LastSceneViewRotation: {x: 0.7071067, y: 0, z: 0, w: 0.7071067}
   m_LastSceneViewOrtho: 0

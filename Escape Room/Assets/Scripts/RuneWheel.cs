@@ -6,6 +6,9 @@ public class RuneWheel : MonoBehaviour
 {
     public Transform tracker;
     public Transform[] rings;
+    public Material[] materials;
+    public GameObject leftButton;
+    public Door door;
     int middleDisplacement, outerDisplacement;
     float increments = 360f / 26f;
     public PassCode[] passcode;
@@ -21,6 +24,9 @@ public class RuneWheel : MonoBehaviour
     {
         savedRotations[0] = 0f;
         savedRotations[1] = 0f;
+        ArduinoHandler.BtnOnePress += CheckConditionOnButtonPress;
+        ArduinoHandler.BtnTwoPress += ChangeWheel;
+
     }
 
 
@@ -31,7 +37,9 @@ public class RuneWheel : MonoBehaviour
             //Passcode input, if the two wheels are in the correct posiotion the progress counter goes up
             if (Input.GetKeyDown("space")) //test input, will be a button
             {
-                if (checkCondition(progress))
+                Debug.Log(middleDisplacement);
+                Debug.Log(outerDisplacement);
+                if (CheckCondition(progress))
                 {
                     //Add visual representation if it's gewd
                     Debug.Log("right");
@@ -59,7 +67,7 @@ public class RuneWheel : MonoBehaviour
             }
 
             //Inputs for testing the puzzle, it will be replaced with VR moving things.
-            /*
+            
             if (Input.GetKeyDown("right")) //moving the disk right
             {
                 if (middleRingActive) rings[1].transform.Rotate(0, increments, 0);
@@ -69,7 +77,7 @@ public class RuneWheel : MonoBehaviour
             {
                 if (middleRingActive) rings[1].transform.Rotate(0, -increments, 0);
                 else rings[0].transform.Rotate(0, -increments, 0);
-            }*/
+            }
 
             //Debug.Log(middleRing.eulerAngles.y);
             //Debug.Log(middleDisplacement);
@@ -80,19 +88,38 @@ public class RuneWheel : MonoBehaviour
         else if (!puzzleDone) //if we did the puzzle
         {
             Debug.Log("DONE"); //this will be the door opening thing
+            //door.ActivateDoor();
             puzzleDone = true; //we only have to do it once
         }
     }
 
-    bool checkCondition(int conditionIndex) //checks the runewheel's current positions to the passcode positions of the given index
+
+
+    bool CheckCondition(int conditionIndex) //checks the runewheel's current positions to the passcode positions of the given index
     {
         return (middleDisplacement == passcode[conditionIndex].middleSymbol && outerDisplacement == passcode[conditionIndex].outerSymbol);
+    }
+
+    void CheckConditionOnButtonPress()
+    {
+        if (CheckCondition(progress))
+        {
+            //Add visual representation if it's gewd
+            Debug.Log("right");
+            progress++;
+        }
+        else
+        {
+            Debug.Log("wrong");
+            //add visual representation if not good
+        }
     }
 
     void ChangeWheel()
     {
         rotationSnapshot = tracker.eulerAngles.z;
         savedRotations[BoolToInt(middleRingActive)] = rings[BoolToInt(middleRingActive)].transform.eulerAngles.y;
+        leftButton.GetComponent<Renderer>().material = materials[BoolToInt(middleRingActive)]; 
         middleRingActive = !middleRingActive;
     }
 
