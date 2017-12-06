@@ -6,21 +6,27 @@ public class Chest : MonoBehaviour
 {
     public GameObject lid;
     public Transform tracker;
+    Collider lidCollider;
     public bool isTrackerVersion, isLocked;
 
     void Start()
     {
 		isLocked = true;
-        lid.GetComponent<Valve.VR.InteractionSystem.CircularDrive>().enabled = false;
+        lidCollider = lid.GetComponentInChildren<MeshCollider>();
+        lidCollider.enabled = false;
     }
 
     void Update()
     {
+        if(Input.GetKeyDown("return")){
+            UnlockChest();
+            Debug.Log("unlocled");
+        }
         if (isTrackerVersion)
         {
             if (!isLocked)
             {
-                //I will put the rotation of the racker here
+                lid.transform.localRotation = Quaternion.Euler(-tracker.eulerAngles.x-90, 0,0);
             }
         }
     }
@@ -28,6 +34,6 @@ public class Chest : MonoBehaviour
     public void UnlockChest()
     {
         isLocked = false;
-        lid.GetComponent<Valve.VR.InteractionSystem.CircularDrive>().enabled = true;
+        lidCollider.enabled = true;
     }
 }

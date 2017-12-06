@@ -2,9 +2,15 @@
 Shader "Custom/LightReveal" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
-		_MainTex ("Albedo (RGB)", 2D) = "white" {}
-		_Glossiness ("Smoothness", Range(0,1)) = 0.5
-		_Metallic ("Metallic", Range(0,1)) = 0.0
+
+		// Background Texture
+		_MainTex ("Background Texture", 2D) = "white" {}
+		
+		// Decal Texture
+		_DecalTex ("Hidden Texture", 2D) = "black" {}
+
+		//Normalmap
+		_BumpMap ("Normalmap", 2D) = "bump" {}
 
 		// Default direction of the spotlight cone
 		_LightDirection("Light Direction", Vector) = (0,0,1,0)
@@ -16,7 +22,9 @@ Shader "Custom/LightReveal" {
 		_LightAngle("Light Angle", Range(0,180)) = 45
 
 		// Intensity scalar
-		_IntensityScalar("Intensity", Float) = 50
+		_IntensityScalar("Intensity", Float) = 0
+
+		
 	}
 	SubShader {
 		Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
@@ -31,14 +39,16 @@ Shader "Custom/LightReveal" {
 		#pragma target 3.0
 
 		sampler2D _MainTex;
+		sampler2D _DecalTex;
+		sampler2D _BumpMap;
 
 		struct Input {
 			float2 uv_MainTex;
+			float2 uv_DecalTex;
+			float2 uv_BumpMap;
 			float3 worldPos;
 		};
 
-		half _Glossiness;
-		half _Metallic;
 		fixed4 _Color;
 		float4 _LightPosition;
 		float4 _LightDirection;
@@ -58,16 +68,24 @@ Shader "Custom/LightReveal" {
 
 			//If the intensity is bigger than 1 it returns 1. If it's between 0 and one it returns the value. If it's smaller than 0 it returns 0.
 			intensity = min(max(intensity * _IntensityScalar, 0), 1);
+			float2 uv_hidden = IN.uv_DecalTex;
+			
 
-			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-			o.Albedo = c.rgb;
-			o.Emission = c.rgb * c.a * intensity;
+			// Load Background Texture and Decal Texture
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex);
+			half4 decal = tex2D(_DecalTex, uv_hidden) * _Color;
+
+			// Albedo is the decal color multiplied by the alpha channel within the light cone
+			// And the background color multiplied by the color tint in the light cone
+			o.Albedo = (decal.rgb * decal.a * intensity * 2) + c.rgb * (1 - intensity) + (c.rgb * _Color * intensity);
+			o.Emission = decal.rgb * decal.a * intensity;
+
+			//Add normalmap
+			o.Normal = UnpackNormal (tex2D (_BumpMap, IN.uv_BumpMap));
 
 			// Metallic and smoothness come from slider variables
-			o.Metallic = _Metallic;
-			o.Smoothness = _Glossiness;
-			o.Alpha = intensity * c.a ;
+			o.Alpha = c.a;
+			
 		}
 		ENDCG
 	}

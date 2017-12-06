@@ -4,35 +4,29 @@ using UnityEngine;
 
 public class LightCone : MonoBehaviour
 {
-    void OnTriggerEnter(Collider collision)
-    {
-        Debug.Log("we just hit " + collision.transform.name);
-        LightSphere lightSphere = collision.GetComponentInParent<LightSphere>();
-        if (lightSphere != null && transform.position.y >= collision.transform.position.y)
-        {
-            //Debug.Log("found lightsphere");
-            lightSphere.TurnLightOn();
-        }
-    }
+    public LightRevealSource LRSource;
+    LightSphere ls;
 
-	void OnTriggerStay(Collider collision)
+    void Update()
     {
-        Debug.Log("we just hit " + collision.transform.name);
-        LightSphere lightSphere = collision.GetComponentInParent<LightSphere>();
-        if (lightSphere != null && transform.position.y >= collision.transform.position.y)
+        if (LRSource.activeLightID != -1)
         {
-            //Debug.Log("found lightsphere");
-            lightSphere.TurnLightOn();
-        }
-    }
+            Ray ray = new Ray(transform.position, transform.forward);
+            RaycastHit hitInfo;
+            int sphereMask = LayerMask.GetMask("Sphere");
+            if (Physics.Raycast(ray, out hitInfo, 100, sphereMask))
+            {
+                Debug.DrawLine(ray.origin, hitInfo.point, Color.red);
 
-    void OnTriggerExit(Collider collision)
-    {
-        print("No longer in contact with " + collision.transform.name);
-        LightSphere lightSphere = collision.GetComponentInParent<LightSphere>();
-        if (lightSphere != null)
-        {
-            lightSphere.TurnLightOff();
+                ls = hitInfo.collider.GetComponentInParent<LightSphere>();
+                ls.TurnLightOn();
+            }
+            else
+            {
+                Debug.DrawLine(ray.origin, ray.origin + ray.direction * 100, Color.green); //Draws a green line if it hits anything else
+                if (ls != null) ls.TurnLightOff();
+            }
         }
+        else if (ls != null) ls.TurnLightOff();
     }
 }

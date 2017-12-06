@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Reveal
-  m_Shader: {fileID: 4800000, guid: ba94165b9e4f58d4b9ca029a89908b11, type: 3}
+  m_Shader: {fileID: 4800000, guid: 9d857e03110873148bcc02aa187502b2, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,9 +19,13 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: bccf049067d66b3418597427879914f6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DecalTex:
+        m_Texture: {fileID: 2800000, guid: e95c1586adf9aec4c85139321cb61b2e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: -0.05, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -39,7 +43,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: e0c8ab872fef1bb45b80dfa497f221f9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -62,7 +66,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _IntensityScalar: 50
+    - _IntensityScalar: 0
     - _LightAngle: 30
     - _Metallic: 0.62
     - _Mode: 0
@@ -74,7 +78,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 1, a: 1}
+    - _Color: {r: 1, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _LightDirection: {r: 0, g: 0, b: 1, a: 0}
-    - _LightPosition: {r: 2.544, g: -0.77835405, b: 0.044999838, a: 0}
+    - _LightDirection: {r: -0.94979244, g: 0.21871823, b: 0.22373354, a: 0}
+    - _LightPosition: {r: -0.17032194, g: 0.8808894, b: 0.38451803, a: 0}

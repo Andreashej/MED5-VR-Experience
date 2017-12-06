@@ -8,6 +8,7 @@ public class VRPositionHelper : MonoBehaviour
     public Transform tracker;
     public bool isTrackerMode;
     public float calibrationTime;
+    public float snapshot;
     float elapsedTime;
 
     void Awake(){
@@ -20,6 +21,7 @@ public class VRPositionHelper : MonoBehaviour
         {
             transform.position = new Vector3(tracker.position.x, transform.position.y, tracker.position.z);
             elapsedTime += Time.deltaTime;
+            snapshot = tracker.eulerAngles.z;
         }
     }
 }

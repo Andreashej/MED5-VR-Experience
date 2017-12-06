@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class RuneWheel : MonoBehaviour
 {
+    public AudioClip lightBulbSound;
+    public AudioClip unlockDoorSound;
+    public AudioSource soundSource;
     public Transform tracker;
     public Transform[] rings;
     public Material[] materials;
@@ -12,13 +15,15 @@ public class RuneWheel : MonoBehaviour
     int middleDisplacement, outerDisplacement;
     float increments = 360f / 26f;
     public PassCode[] passcode;
-    bool middleRingActive = true;
+    public bool middleRingActive = true;
     bool puzzleDone = false;
     int progress = 0;
     public float rotationSnapshot;
 
     public bool isTrackerVersion = false;
     public float[] savedRotations;
+
+    public GameObject[] lights;
 
     void Start()
     {
@@ -44,6 +49,8 @@ public class RuneWheel : MonoBehaviour
                     //Add visual representation if it's gewd
                     Debug.Log("right");
                     progress++;
+                    lights[progress - 1].SetActive(true);
+                    soundSource.PlayOneShot(lightBulbSound, 1.0f);
                 }
                 else
                 {
@@ -51,6 +58,12 @@ public class RuneWheel : MonoBehaviour
                     //add visual representation if not good
                 }
             }
+
+            if (middleRingActive)
+            {
+
+            }
+
             if (Input.GetKeyDown("return")) ChangeWheel(); //This will be a button to change between the two rings
 
 
@@ -62,12 +75,12 @@ public class RuneWheel : MonoBehaviour
 
             if (isTrackerVersion)
             {
-                transform.position = tracker.position;
+                //transform.position = tracker.position;
                 rings[BoolToInt(middleRingActive)].rotation = Quaternion.Euler(0, tracker.eulerAngles.z - rotationSnapshot + savedRotations[BoolToInt(middleRingActive)], 0);
             }
 
             //Inputs for testing the puzzle, it will be replaced with VR moving things.
-            
+
             if (Input.GetKeyDown("right")) //moving the disk right
             {
                 if (middleRingActive) rings[1].transform.Rotate(0, increments, 0);
@@ -87,9 +100,11 @@ public class RuneWheel : MonoBehaviour
         }
         else if (!puzzleDone) //if we did the puzzle
         {
+            soundSource.PlayOneShot(unlockDoorSound, 1.0f);
             Debug.Log("DONE"); //this will be the door opening thing
-            //door.ActivateDoor();
+            door.ActivateDoor();
             puzzleDone = true; //we only have to do it once
+            ArduinoHandler.BtnOnePress -= CheckConditionOnButtonPress;
         }
     }
 
@@ -100,13 +115,15 @@ public class RuneWheel : MonoBehaviour
         return (middleDisplacement == passcode[conditionIndex].middleSymbol && outerDisplacement == passcode[conditionIndex].outerSymbol);
     }
 
-    void CheckConditionOnButtonPress()
+    public void CheckConditionOnButtonPress()
     {
         if (CheckCondition(progress))
         {
             //Add visual representation if it's gewd
             Debug.Log("right");
             progress++;
+            lights[progress - 1].SetActive(true);
+            soundSource.PlayOneShot(lightBulbSound, 1.0f);
         }
         else
         {
@@ -119,7 +136,7 @@ public class RuneWheel : MonoBehaviour
     {
         rotationSnapshot = tracker.eulerAngles.z;
         savedRotations[BoolToInt(middleRingActive)] = rings[BoolToInt(middleRingActive)].transform.eulerAngles.y;
-        leftButton.GetComponent<Renderer>().material = materials[BoolToInt(middleRingActive)]; 
+        leftButton.GetComponent<Renderer>().material = materials[BoolToInt(middleRingActive)];
         middleRingActive = !middleRingActive;
     }
 
