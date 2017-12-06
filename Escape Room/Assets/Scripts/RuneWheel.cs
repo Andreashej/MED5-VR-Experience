@@ -27,8 +27,10 @@ public class RuneWheel : MonoBehaviour
 
     void Start()
     {
+        //intitialising the saved rotations
         savedRotations[0] = 0f;
         savedRotations[1] = 0f;
+        //subscribing to the arduino button presses
         ArduinoHandler.BtnOnePress += CheckConditionOnButtonPress;
         ArduinoHandler.BtnTwoPress += ChangeWheel;
 
@@ -39,8 +41,34 @@ public class RuneWheel : MonoBehaviour
     {
         if (progress < passcode.Length) //if it's not done yet
         {
+            //Displacement calculation
+            //This still calculates the displacement of the middle ring, even though we disabled it in the test.
+            middleDisplacement = Mathf.FloorToInt(26 * (rings[1].eulerAngles.y + increments / 2f) / 360f);
+            if (middleDisplacement == 26) middleDisplacement = 0; //Because of the calculation, -6.92 to 0 degrees is 26 instead of 0, this is to correct that.
+            outerDisplacement = Mathf.FloorToInt(26 * (rings[0].eulerAngles.y + increments / 2f) / 360f);
+            if (outerDisplacement == 26) outerDisplacement = 0; //Same if statement as with the middle ring
+
+            //This runs if the tracker version is being played.
+            if (isTrackerVersion)
+            {
+                rings[BoolToInt(middleRingActive)].rotation = Quaternion.Euler(0, tracker.eulerAngles.z - rotationSnapshot + savedRotations[BoolToInt(middleRingActive)], 0);
+            }
+
+            /* //Keyboard inputs for debugging purposes
+
+            if (Input.GetKeyDown("right")) //moving the disk right
+            {
+                if (middleRingActive) rings[1].transform.Rotate(0, increments, 0);
+                else rings[0].transform.Rotate(0, increments, 0);
+            }
+            if (Input.GetKeyDown("left")) //moving the disc left
+            {
+                if (middleRingActive) rings[1].transform.Rotate(0, -increments, 0);
+                else rings[0].transform.Rotate(0, -increments, 0);
+            }
+
             //Passcode input, if the two wheels are in the correct posiotion the progress counter goes up
-            if (Input.GetKeyDown("space")) //test input, will be a button
+            if (Input.GetKeyDown("space"))
             {
                 Debug.Log(middleDisplacement);
                 Debug.Log(outerDisplacement);
@@ -58,45 +86,8 @@ public class RuneWheel : MonoBehaviour
                     //add visual representation if not good
                 }
             }
-
-            if (middleRingActive)
-            {
-
-            }
-
-            if (Input.GetKeyDown("return")) ChangeWheel(); //This will be a button to change between the two rings
-
-
-            middleDisplacement = Mathf.FloorToInt(26 * (rings[1].eulerAngles.y + increments / 2f) / 360f);
-            if (middleDisplacement == 26) middleDisplacement = 0; //Because of the calculation, -6.92 to 0 degrees is 26 instead of 0, this is to correct that.
-            outerDisplacement = Mathf.FloorToInt(26 * (rings[0].eulerAngles.y + increments / 2f) / 360f);
-            if (outerDisplacement == 26) outerDisplacement = 0; //Same if statement as with the middle ring
-
-
-            if (isTrackerVersion)
-            {
-                //transform.position = tracker.position;
-                rings[BoolToInt(middleRingActive)].rotation = Quaternion.Euler(0, tracker.eulerAngles.z - rotationSnapshot + savedRotations[BoolToInt(middleRingActive)], 0);
-            }
-
-            //Inputs for testing the puzzle, it will be replaced with VR moving things.
-
-            if (Input.GetKeyDown("right")) //moving the disk right
-            {
-                if (middleRingActive) rings[1].transform.Rotate(0, increments, 0);
-                else rings[0].transform.Rotate(0, increments, 0);
-            }
-            if (Input.GetKeyDown("left")) //moving the disc left
-            {
-                if (middleRingActive) rings[1].transform.Rotate(0, -increments, 0);
-                else rings[0].transform.Rotate(0, -increments, 0);
-            }
-
-            //Debug.Log(middleRing.eulerAngles.y);
-            //Debug.Log(middleDisplacement);
-
-
-
+            //Wheelchange input
+            if (Input.GetKeyDown("return")) ChangeWheel(); //This will be a button to change between the two rings */
         }
         else if (!puzzleDone) //if we did the puzzle
         {
@@ -115,11 +106,12 @@ public class RuneWheel : MonoBehaviour
         return (middleDisplacement == passcode[conditionIndex].middleSymbol && outerDisplacement == passcode[conditionIndex].outerSymbol);
     }
 
+    //This method runs when you click the button on the pedestal
     public void CheckConditionOnButtonPress()
     {
         if (CheckCondition(progress))
         {
-            //Add visual representation if it's gewd
+            //This runs when the position of the ring is correct
             Debug.Log("right");
             progress++;
             lights[progress - 1].SetActive(true);
@@ -128,10 +120,11 @@ public class RuneWheel : MonoBehaviour
         else
         {
             Debug.Log("wrong");
-            //add visual representation if not good
+            //nothing happens if the input is wrong
         }
     }
 
+    //In the tracker version a second button can be used to change which ring we want to rotate. The method is obsolete because we don't use two rings in the test.
     void ChangeWheel()
     {
         rotationSnapshot = tracker.eulerAngles.z;
@@ -140,6 +133,7 @@ public class RuneWheel : MonoBehaviour
         middleRingActive = !middleRingActive;
     }
 
+    //Simple boolean to integer conversion, to convert middleRingActive to an array index.
     int BoolToInt(bool b)
     {
         if (b) return 1;

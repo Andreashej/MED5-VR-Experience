@@ -18,7 +18,6 @@ public class LightSphere : MonoBehaviour
     public Vector2 btnCoords;
     public Transform tracker, sphere;
     public GameObject[] lights;
-    public BezierCurve[] curves;
     public float wiggleRoom; //So the positions don't have to be extremely precise. wiggleRoom has to be at least 1, due to how float values are stored and compared
     [Range(0, 2)]
     public int currentLight; //It shows which light color we need to check for, also used to activate light visuals. 0-2 for the 3 colors so we can use them as array indexes.
@@ -51,21 +50,17 @@ public class LightSphere : MonoBehaviour
 
             btnCoords = new Vector2(device.GetAxis().x, device.GetAxis().y);
 
-            if (btnCoords.x < 0 && btnCoords.y > 0)
-            {
-                ChangeLight(1);
-            }
-            else if (btnCoords.x < 0 && btnCoords.y < 0)
+            if (btnCoords.x < 0 && btnCoords.y < 0)
             {
                 ChangeLight(0);
+            }
+            else if (btnCoords.x < 0 && btnCoords.y > 0)
+            {
+                ChangeLight(1);
             }
             else if (btnCoords.x > 0 && btnCoords.y > 0)
             {
                 ChangeLight(2);
-            }
-            else if (btnCoords.x > 0 && btnCoords.y < 0)
-            {
-
             }
         }
     }
@@ -73,20 +68,18 @@ public class LightSphere : MonoBehaviour
     void Update()
     {
         device = SteamVR_Controller.Input((int)trackedObj.index);
-        //if (lightReveal != null) Debug.Log(lightReveal.activeLightID);
+
         if (!isDone)
-
         {
+            if (isTrackerVersion && elapsedTime <= calibrationTime) //calibrating the initial rotation of the sphere
+            {
+                transform.position = new Vector3(tracker.position.x, transform.position.y, tracker.position.z);
+                elapsedTime += Time.deltaTime;
+                rotationSnaphot = tracker.eulerAngles.z;
+            }
 
-            if (isTrackerVersion && elapsedTime <= calibrationTime)
-        {
-            transform.position = new Vector3(tracker.position.x, transform.position.y, tracker.position.z);
-            elapsedTime += Time.deltaTime;
-            rotationSnaphot = tracker.eulerAngles.z;
-        }
-
-            //keyboard controls
-            /*if (Input.GetKeyDown("right"))
+            /* //keyboard controls for debugging
+            if (Input.GetKeyDown("right"))
             {
                 sphere.transform.Rotate(0, 10, 0);
             }
@@ -95,15 +88,9 @@ public class LightSphere : MonoBehaviour
             {
                 sphere.transform.Rotate(0, -10, 0);
             }
-*/
-            if (Input.GetKeyDown("space"))
-            {
-                CheckConditionsOnButtonPress();
-                Debug.Log(sphere.transform.eulerAngles.y);
-                Debug.Log(isDone);
-            }
 
-            /*if (Input.GetKeyDown("r"))
+
+            if (Input.GetKeyDown("r"))
             {
                 ChangeLight(0);
             }
@@ -116,33 +103,39 @@ public class LightSphere : MonoBehaviour
             if (Input.GetKeyDown("b"))
             {
                 ChangeLight(2);
-            }*/
+            }
 
+            if (Input.GetKeyDown("space"))
+            {
+                CheckConditionsOnButtonPress();
+                Debug.Log(sphere.transform.eulerAngles.y);
+                Debug.Log(isDone);
+            } */
         }
-        else if (!chestOpen)
+        else if (!chestOpen) //if the game is done and the chest is not open
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++) //turn on all the lights
             {
                 lights[i].SetActive(true);
             }
-            winLight.SetActive(true);
-            chest.UnlockChest();
+            winLight.SetActive(true); //shine a light on the chest
+            chest.UnlockChest(); //unlock the chest
             chestOpen = true;
-            rotationSnaphot = tracker.eulerAngles.z;
-            sphere.localRotation = Quaternion.Euler(0,rotationSnaphot,0);
+            rotationSnaphot = tracker.eulerAngles.z; //take a final rotation snapshot of the tracker
+            sphere.localRotation = Quaternion.Euler(0, rotationSnaphot, 0); //set the sphere rotation to the rotation
         }
 
-        if (currentLight == -1) TurnLightOff();
-        //The current light followes a Bezier curve. If we want we can modify it to a spline later so the transition at the 0 degree mark is smoother
-
-        if (!isTrackerVersion && currentLight != -1) lights[currentLight].transform.localRotation = Quaternion.Euler(0, -conditions[currentLight] + sphere.eulerAngles.y, 0);
+        //If it's the non-tracker version
+        if (!isTrackerVersion)
+        {
+            lights[currentLight].transform.localRotation = Quaternion.Euler(0, -conditions[currentLight] + sphere.eulerAngles.y, 0);
+        }
 
         //this code is responsible for the rotations when we test the game in "tracker mode" without controllers
-        if (isTrackerVersion && currentLight != -1 && !chestOpen)
+        if (isTrackerVersion && !chestOpen)
         {
-            sphere.localRotation =  Quaternion.Euler(0, tracker.eulerAngles.z - rotationSnaphot + savedRotations[currentLight], 0);
-            lights[currentLight].transform.localRotation = Quaternion.Euler(0, sphere.eulerAngles.y - conditions[currentLight],0);
-            //lights[currentLight].transform.localRotation = Quaternion.Euler(0, tracker.eulerAngles.z - rotationSnaphot + savedRotations[currentLight], 0);
+            sphere.localRotation = Quaternion.Euler(0, tracker.eulerAngles.z - rotationSnaphot + savedRotations[currentLight], 0);
+            lights[currentLight].transform.localRotation = Quaternion.Euler(0, sphere.eulerAngles.y - conditions[currentLight], 0);
         }
     }
 
@@ -173,9 +166,9 @@ public class LightSphere : MonoBehaviour
         {
             if (i == currentLight)
             {
-                if (CheckCondition() == false) return false;
+                if (CheckCondition() == false) return false; //checking the condition for the current light
             }
-            else if (CheckCondition(i) == false)
+            else if (CheckCondition(i) == false) //checking the conditions for the other lights
             {
                 return false;
             }
@@ -183,6 +176,7 @@ public class LightSphere : MonoBehaviour
         return true;
     }
 
+    //this runs when we press the buttons on the pedestal
     public void CheckConditionsOnButtonPress()
     {
         soundSource.PlayOneShot(btnPressSound, 1.0f);
@@ -203,11 +197,9 @@ public class LightSphere : MonoBehaviour
     //Changes the current light to the one passed in the light argument
     void ChangeLight(int light)
     {
-        if(isDone) return;
+        if (isDone) return;
         isLit = false;
-        rotationSnaphot = tracker.eulerAngles.z;
-        //lights[currentLight].SetActive(false); //turns off the current light
-        //lights[light].SetActive(true); //turns on the next light
+        rotationSnaphot = tracker.eulerAngles.z; //Takes a snapshot of the tracker's current rotation so we can switch the projections' orientations
         savedRotations[currentLight] = sphere.eulerAngles.y; //saves the current rotation
         currentLight = light; //changes currentLight to the new one
         if (!isTrackerVersion) sphere.rotation = Quaternion.Euler(0, savedRotations[light], 0); //loads the saved rotation for the new light
@@ -215,21 +207,20 @@ public class LightSphere : MonoBehaviour
 
     public void TurnLightOn()
     {
-        if(isDone) return;
-        if (currentLight == -1) return;
-        if (!isLit)
+        if (isDone) return; //If the game is done it won't run
+        if (!isLit) //if the light isn't alredy on
         {
             Debug.Log("light on");
-            for (int i = 0; i < 3; i++) lights[i].SetActive(false);
-            lights[currentLight].SetActive(true);
+            for (int i = 0; i < 3; i++) lights[i].SetActive(false); //turns off every light
+            lights[currentLight].SetActive(true); //turns back on the current one
         }
         isLit = true;
     }
 
     public void TurnLightOff()
     {
-        if(isDone) return;
-        for (int i = 0; i < 3; i++) lights[i].SetActive(false);
+        if (isDone) return; //If the game is done it won't run
+        for (int i = 0; i < 3; i++) lights[i].SetActive(false); //turns every light off
         isLit = false;
     }
 

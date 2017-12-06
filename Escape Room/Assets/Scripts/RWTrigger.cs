@@ -12,11 +12,11 @@ public class RWTrigger : MonoBehaviour
 
     void Start()
     {
-        controller = controllerHand.GetComponent<SteamVR_TrackedController>();
+        controller = controllerHand.GetComponent<SteamVR_TrackedController>(); //initialising the controller and subscribing to the click event
         controller.TriggerClicked += new ClickedEventHandler(RWbtnPressed);
     }
 
-    void RWbtnPressed (object sender, ClickedEventArgs e)
+    void RWbtnPressed (object sender, ClickedEventArgs e) //if we're in a collider and click the button then it checks for conditions
     {
         Debug.Log(inCollider);
 
@@ -28,11 +28,11 @@ public class RWTrigger : MonoBehaviour
  
     void OnTriggerEnter(Collider collision)
     {
-        inCollider = true;
+        inCollider = true; //when we enter a collider it becomes true
     }
 
     void OnTriggerExit(Collider collision)
     {
-        inCollider = false;
+        inCollider = false; //when we exit a collider we change it to false
     }
 }

@@ -16,17 +16,19 @@ public class Door : MonoBehaviour
     void Update()
     {
         locationDirection = tracker.GetLocationAndDirection();
-        //keyboard input
+        //keyboard input for debugging
         /*if (Input.GetKeyDown("space"))
         {
             ActivateDoor();
         }*/
 
+        //The first trigger condition of the door
         if(CheckCondition(openCondition) && !conditionFulfilled) {
             ActivateDoor();
             conditionFulfilled = true;
         }
 
+        //The second trigger condition of the door
         if(closeCondition.tile != null) {
             if(CheckCondition(closeCondition) && !secondCondition) {
                 ActivateDoor();
@@ -36,12 +38,14 @@ public class Door : MonoBehaviour
 
     }
 
+    //Opens or closes the door
     public void ActivateDoor()
     {
         if (isOpen) CloseDoor();
         else OpenDoor();
     }
 
+    //Opens the door
     void OpenDoor()
     {
         if (isOpen) return;
@@ -49,6 +53,7 @@ public class Door : MonoBehaviour
         isOpen = true;
     }
 
+    //Closes the door
     void CloseDoor()
     {
         if (!isOpen) return;
@@ -56,11 +61,13 @@ public class Door : MonoBehaviour
         isOpen = false;
     }
 
+    //Same method as in the RoomSwitcher class but ignores look direction
     bool CheckCondition(LocDirID condition)
     {
         return (locationDirection.tile == condition.tile);
     }
 
+    //Same method as in the RoomSwitcher class but ignores look direction
     bool CheckCondition(SwitchCondition condition)
     {
         if (condition.tile.Length == 1) //if we only have one tile condition we can just use the old one, no need to enter a for loop..
@@ -78,8 +85,8 @@ public class Door : MonoBehaviour
                     break; //we don't have to check anymore
                 }
             }
-            return (tile);
-        } //since we're standing on the correct tile, we check for looking tile and return the result
+            return (tile); //we return the value of "tile" after the loop, if we broke out of the loop it'll be true otherwise false
+        }
     }
 
 }

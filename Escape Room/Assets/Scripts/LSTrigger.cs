@@ -11,11 +11,12 @@ public class LSTrigger : MonoBehaviour {
 
     void Start()
     {
+        //initialising the controller and subscribing to the click event
         controller = controllerHand.GetComponent<SteamVR_TrackedController>();
         controller.TriggerClicked += new ClickedEventHandler(RWbtnPressed);
     }
 
-    void RWbtnPressed (object sender, ClickedEventArgs e)
+    void RWbtnPressed (object sender, ClickedEventArgs e) //if we're in a collider and click the button we check for conditions
     {
         Debug.Log(inCollider);
 
@@ -24,7 +25,8 @@ public class LSTrigger : MonoBehaviour {
             lsPuzzle.CheckConditionsOnButtonPress();
         }
     }
- 
+
+    //when we enter or exit a collider the variable changes between true/false
     void OnTriggerEnter(Collider collision)
     {
         inCollider = true;

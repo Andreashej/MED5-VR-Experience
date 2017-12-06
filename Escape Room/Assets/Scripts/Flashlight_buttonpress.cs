@@ -10,10 +10,9 @@ public class Flashlight_buttonpress : MonoBehaviour
     private SteamVR_TrackedController controller;
     public Vector2 btnCoords;
 
-    // Use this for initialization
     void Start()
     {
-        
+        //initialising the variables and subscribing to the buttin click event
         trackedObj = GetComponent<SteamVR_TrackedObject>();
         controller = GetComponent<SteamVR_TrackedController>();
         controller.PadClicked += Controller_BtnPress;
@@ -21,6 +20,7 @@ public class Flashlight_buttonpress : MonoBehaviour
 
     private void Controller_BtnPress(object sender, ClickedEventArgs e)
     {
+         //debugging
         if (device.GetAxis().x != 0 || device.GetAxis().y != 0)
         {
             Debug.Log(device.GetAxis().x + " " + device.GetAxis().y);
@@ -28,7 +28,6 @@ public class Flashlight_buttonpress : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         device = SteamVR_Controller.Input((int)trackedObj.index);
